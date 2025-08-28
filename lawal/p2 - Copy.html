@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Auwal Lawal — Player Profile</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg-1: #0b0f1a;       /* Darker navy tone */
+    --bg-2: #1a2636;       /* Smooth gradient */
+    --accent: #00d4ff;     /* Bright cyan accent */
+    --card-bg: rgba(255,255,255,0.08);
+    --glass: rgba(255,255,255,0.06);
+    --text-main: #f9f9f9;  /* Bright white text */
+    --muted: #c9d1d9;      /* Soft gray for secondary text */
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    background: linear-gradient(135deg,var(--bg-1),var(--bg-2));
+    color: var(--text-main);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    line-height:1.65;
+    padding:18px 0;
+  }
+
+  .wrap{max-width:1200px;margin:0 auto;padding:0 18px}
+
+  /* Header */
+  header{
+    text-align:center;
+    padding:38px 18px;
+    margin-bottom:18px;
+    color:var(--text-main);
+    border-radius:12px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+    box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+  }
+  header h1{
+    font-family:'Rajdhani',sans-serif;
+    font-size:2.6rem;
+    letter-spacing:1.6px;
+  }
+  header p{
+    opacity:0.95;
+    margin-top:8px;
+    color:var(--muted);
+  }
+
+  /* Card sections */
+  section.card{
+    background: var(--card-bg);
+    border-radius:14px;
+    padding:20px;
+    margin:18px 0;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.38);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.06);
+    animation: slideUp .6s ease both;
+  }
+  @keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  section.card h2{
+    font-family:'Rajdhani',sans-serif;
+    color:var(--accent);
+    font-size:1.5rem;
+    margin-bottom:12px;
+    border-bottom:2px solid rgba(0,212,255,0.25);
+    display:inline-block;
+    padding-bottom:6px;
+  }
+
+  /* Player info */
+  .player-grid{
+    display:grid;
+    grid-template-columns: 1fr 320px;
+    gap:18px;
+    align-items:start;
+  }
+  .player-meta p{
+    margin:8px 0;
+    color:var(--text-main);
+  }
+  .portrait{
+    min-height:240px;border-radius:10px;overflow:hidden;
+    background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+    display:flex;align-items:center;justify-content:center;
+  }
+  .portrait img{width:100%;height:100%;object-fit:cover}
+
+  /* Gallery */
+  .gallery {margin-top:8px;}
+
+  /* Slideshow container (mobile) */
+  .slideshow-container{
+    position:relative;width:100%;height:520px;border-radius:12px;overflow:hidden;background:#000;
+  }
+  .slideshow-container .slides{
+    position:absolute; inset:0; opacity:0; transition:opacity .5s ease;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .slideshow-container .slides.active{opacity:1; z-index:2}
+  .slideshow-container img{width:100%;height:100%;object-fit:cover;display:block}
+
+  .controls{
+    position:absolute; top:50%; left:0; right:0; display:flex;justify-content:space-between;
+    transform:translateY(-50%);pointer-events:none;
+  }
+  .btn{
+    pointer-events:auto;
+    background: rgba(0,0,0,0.55);
+    border:1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    width:44px;height:44px;border-radius:999px;display:grid;place-items:center;font-size:20px;
+    margin:0 10px; transition:transform .15s;
+  }
+  .btn:active{transform:scale(.96)}
+  .dots{
+    position:absolute;left:50%;transform:translateX(-50%);bottom:12px;display:flex;gap:8px;
+  }
+  .dot{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,0.6);opacity:.7}
+  .dot.active{background:var(--accent);opacity:1;transform:scale(1.3)}
+
+  /* Desktop grid gallery */
+  .grid-gallery{display:none;grid-template-columns: repeat(3,1fr);gap:12px}
+  .grid-gallery img{
+    width:100%;height:520px;object-fit:cover;border-radius:12px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.35);transition:transform .25s ease;
+  }
+  .grid-gallery img:hover{transform:scale(1.03)}
+
+  /* video wrapper */
+  .video-wrapper{position:relative;padding-bottom:56.25%;height:0;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.38)}
+  .video-wrapper iframe{position:absolute;left:0;top:0;width:100%;height:100%;border:0;border-radius:12px}
+
+  /* table */
+  .table-wrapper{overflow-x:auto;border-radius:8px;padding:6px;background:linear-gradient(90deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))}
+  table{min-width:680px;border-collapse:collapse;width:100%}
+  th,td{padding:10px;border:1px solid rgba(255,255,255,0.1);text-align:center;color:var(--text-main)}
+  th{background:linear-gradient(90deg, rgba(0,212,255,0.3), rgba(0,212,255,0.15));color:#0b0f1a;font-weight:700}
+
+  /* responsive */
+  @media (max-width: 767.98px){
+    .player-grid{grid-template-columns:1fr}
+    .portrait{min-height:200px}
+    .grid-gallery{display:none}
+    .slideshow-container{display:block}
+    .controls{display:flex}
+  }
+  @media (min-width: 768px){
+    .slideshow-container{display:none}
+    .grid-gallery{display:grid}
+    .controls{display:none}
+  }
+
+  .muted {color:var(--muted)}
+  .actions {display:flex;gap:10px;margin-top:12px}
+  .btn-primary{
+    background:linear-gradient(90deg,#00d4ff,#00f7ff);
+    color:#0b0f1a;
+    border:none;padding:8px 12px;
+    border-radius:8px;font-weight:700
+  }
+</style>
+
+</head>
+<body>
+  <div class="wrap">
+
+    <header>
+      <h1>Auwal Lawal</h1>
+    <p>Professional Midfielder | Dynamic Playmaker | Vision & Control</p>
+    </header>
+
+    <!-- Player Info -->
+    <section class="card" aria-labelledby="player-info">
+      <h2 id="player-info">Player Information</h2>
+      <div class="player-grid">
+        <div class="player-meta">
+          <p><strong>Full name:</strong> Auwal Lawal</p>
+          <p><strong>Position:</strong> Central Midfielder (CM) / Defensive Midfielder (CDM)</p>
+          <p><strong>Date of birth:</strong> 12 February 2001 (24)</p>
+          <p><strong>Height / Weight:</strong> 1.80 m / 74 kg</p>
+          <p><strong>Current club:</strong> Free Agent</p>
+          <p><strong>Nationality:</strong> Nigerian</p>
+          <p class="muted">Quick summary: Box-to-box midfielder with excellent passing, defensive impact and leadership.</p>
+          <div class="actions"><a class="btn-primary" href="#">Request Trial</a></div>
+        </div>
+
+        <aside class="portrait" aria-hidden="true">
+          <img src="1.jpg" alt="Auwal portrait (replace with official image)">
+        </aside>
+      </div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="card" aria-labelledby="gallery">
+      <h2 id="gallery">Photo Highlights</h2>
+
+      <div class="gallery">
+        <!-- Mobile slideshow (visible under 768px) -->
+        <div class="slideshow-container" id="slideshow" aria-live="polite">
+          <div class="slides"><img src="1.jpg" alt="Auwal action 1"></div>
+          <div class="slides"><img src="2.jpg" alt="Auwal action 2"></div>
+          <div class="slides"><img src="3.jpg" alt="Auwal action 3"></div>
+          <div class="slides"><img src="4.jpg" alt="Auwal action 4"></div>
+          <div class="slides"><img src="5.jpg" alt="Auwal action 5"></div>
+          <div class="slides"><img src="6.jpg" alt="Auwal action 6"></div>
+          <div class="slides"><img src="7.jpg" alt="Auwal action 7"></div>
+
+          <!-- controls (mobile only) -->
+          <div class="controls" aria-hidden="false">
+            <button class="btn" id="prev" aria-label="Previous slide">&#10094;</button>
+            <button class="btn" id="next" aria-label="Next slide">&#10095;</button>
+          </div>
+
+          <div class="dots" id="dots" role="tablist" aria-label="Slide indicators"></div>
+        </div>
+
+        <!-- Desktop grid -->
+        <div class="grid-gallery" id="gridGallery" aria-hidden="true">
+          <img src="1.jpg" alt="Auwal action 1">
+          <img src="2.jpg" alt="Auwal action 2">
+          <img src="3.jpg" alt="Auwal action 3">
+          <img src="4.jpg" alt="Auwal action 4">
+          <img src="5.jpg" alt="Auwal action 5">
+          <img src="6.jpg" alt="Auwal action 6">
+          <img src="7.jpg" alt="Auwal action 7">
+        </div>
+      </div>
+    </section>
+
+    <!-- Video (after pictures) -->
+    <section class="card" aria-labelledby="video">
+      <h2 id="video">Highlights Video</h2>
+      <div class="video-wrapper" aria-hidden="false">
+        <!-- sample youtube; replace ID with your real video -->
+        <iframe src="https://www.youtube.com/embed/ScMzIvxBSi4" title="Auwal Lawal highlights" allowfullscreen></iframe>
+      </div>
+    </section>
+
+    <!-- Playing Style -->
+    <section class="card">
+      <h2>Playing Style</h2>
+      <p class="muted">Auwal Lawal is a versatile midfielder known for his vision, passing accuracy, and control. Drives tempo, breaks up play, and supports transitions between defence and attack.</p>
+    </section>
+
+    <!-- Strengths -->
+    <section class="card">
+      <h2>Strengths</h2>
+      <ul class="muted">
+        <li>Excellent ball distribution & first touch</li>
+        <li>High tactical awareness & interception</li>
+        <li>Outstanding stamina & work rate</li>
+        <li>Creates chances and links play</li>
+        <li>Leadership on and off the pitch</li>
+      </ul>
+    </section>
+
+    <!-- Attributes -->
+    <section class="card">
+      <h2>Attributes</h2>
+      <ul class="muted">
+        <li><strong>Passing Accuracy:</strong> 87%</li>
+        <li><strong>Tackling Success:</strong> 78%</li>
+        <li><strong>Key Passes / Game:</strong> 2.1</li>
+        <li><strong>Assists (Last Season):</strong> 10</li>
+        <li><strong>Goals (Last Season):</strong> 6</li>
+        <li><strong>Appearances (Career):</strong> 145</li>
+      </ul>
+    </section>
+
+    <!-- Achievements -->
+    <section class="card">
+      <h2>Achievements</h2>
+      <ul class="muted">
+        <li>Voted Best Midfielder — Regional League 2022</li>
+        <li>Club Player of the Year — 2021</li>
+        <li>Led team to two cup finals in 3 seasons</li>
+      </ul>
+    </section>
+
+    <!-- Career Stats (scroll horizontally on mobile) -->
+    <section class="card">
+      <h2>Career Statistics</h2>
+      <div class="table-wrapper" role="region" aria-label="Career statistics table">
+        <table>
+          <thead>
+            <tr><th>Season</th><th>Club</th><th>Appearances</th><th>Goals</th><th>Assists</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>2022/23</td><td>City Strikers FC</td><td>40</td><td>6</td><td>10</td></tr>
+            <tr><td>2021/22</td><td>City Strikers FC</td><td>38</td><td>5</td><td>8</td></tr>
+            <tr><td>2020/21</td><td>United Warriors</td><td>36</td><td>4</td><td>7</td></tr>
+            <tr><td>2019/20</td><td>United Warriors</td><td>31</td><td>3</td><td>6</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Bio -->
+    <section class="card">
+      <h2>Player Bio</h2>
+      <p class="muted">Born in Nigeria, Auwal developed a passion for football early. Known for ball control, vision and discipline, his dedication shaped him into a dependable midfielder attracting scouts and clubs. His ambition: play in top-tier Europe and represent his country.</p>
+    </section>
+
+    <!-- Contact -->
+    <section class="card">
+      <h2>Contact & Representation</h2>
+      <p class="muted"><strong>Agent:</strong> Global Sports Management</p>
+      <p class="muted"><strong>Email:</strong> auwal.lawal.agent@email.com</p>
+      <p class="muted"><strong>Phone:</strong> +234 801 234 5678</p>
+    </section>
+
+    <footer style="margin-top:14px;text-align:center;color:rgba(255,255,255,0.6);">
+      &copy; 2025 Auwal Lawal — Player Profile
+    </footer>
+  </div>
+
+  <script>
+    (function(){
+      // Slides logic: mobile slideshow with controls, stops when not mobile
+      const mql = window.matchMedia('(max-width: 767.98px)');
+      const slideshow = document.getElementById('slideshow');
+      const slidesSelector = () => slideshow ? slideshow.querySelectorAll('.slides') : [];
+      const dotsContainer = document.getElementById('dots');
+      const prevBtn = document.getElementById('prev');
+      const nextBtn = document.getElementById('next');
+      let slides = [];
+      let dots = [];
+      let current = 0;
+      let intervalId = null;
+      const intervalDelay = 3000;
+
+      function createDots(){
+        if(!dotsContainer) return;
+        dotsContainer.innerHTML = '';
+        slides.forEach((_,i)=>{
+          const d = document.createElement('button');
+          d.className = 'dot';
+          d.setAttribute('aria-label','Show slide '+(i+1));
+          d.dataset.index = i;
+          d.addEventListener('click', ()=> {
+            goToSlide(i);
+            restartInterval();
+          });
+          dotsContainer.appendChild(d);
+          dots.push(d);
+        });
+      }
+
+      function updateDots(){
+        dots.forEach((d,i)=> d.classList.toggle('active', i===current));
+      }
+
+      function showSlide(n){
+        slides.forEach((s,i)=>{
+          s.classList.toggle('active', i===n);
+          s.setAttribute('aria-hidden', i===n ? 'false' : 'true');
+        });
+        current = n;
+        updateDots();
+      }
+
+      function nextSlide(){
+        const next = (current + 1) % slides.length;
+        showSlide(next);
+      }
+      function prevSlide(){
+        const prev = (current - 1 + slides.length) % slides.length;
+        showSlide(prev);
+      }
+
+      function startInterval(){
+        if(intervalId) return;
+        intervalId = setInterval(nextSlide, intervalDelay);
+      }
+      function stopInterval(){
+        if(intervalId){ clearInterval(intervalId); intervalId = null; }
+      }
+      function restartInterval(){ stopInterval(); startInterval(); }
+
+      function initSlideshow(){
+        if(!slideshow) return;
+        slides = Array.from(slidesSelector());
+        if(!slides.length) return;
+        // Create dots
+        dots = [];
+        createDots();
+        // Show first slide
+        showSlide(0);
+        // Make sure controls hooked
+        const prev = document.getElementById('prev');
+        const next = document.getElementById('next');
+        if(prev){ prev.addEventListener('click', ()=>{ prevSlide(); restartInterval(); }); }
+        if(next){ next.addEventListener('click', ()=>{ nextSlide(); restartInterval(); }); }
+        // Pause on touch & mouseenter
+        slideshow.addEventListener('mouseenter', stopInterval);
+        slideshow.addEventListener('mouseleave', startInterval);
+        slideshow.addEventListener('touchstart', stopInterval, {passive:true});
+        slideshow.addEventListener('touchend', startInterval, {passive:true});
+        startInterval();
+      }
+
+      function destroySlideshow(){
+        stopInterval();
+        // remove active classes and aria
+        slides = slidesSelector();
+        slides.forEach(s => { s.classList.remove('active'); s.removeAttribute('aria-hidden'); });
+        if(dotsContainer) dotsContainer.innerHTML = '';
+        dots = [];
+        current = 0;
+      }
+
+      // listen for viewport changes
+      function handleChange(e){
+        if(e.matches){
+          // mobile: init slideshow
+          initSlideshow();
+        } else {
+          // desktop: destroy slideshow
+          destroySlideshow();
+        }
+      }
+
+      // attach prev/next buttons into DOM if not present (they are but just in case)
+      // start on load
+      window.addEventListener('load', ()=> {
+        // ensure elements exist
+        // create prev/next buttons if absent
+        if(!document.getElementById('prev') || !document.getElementById('next')){
+          const controls = document.querySelector('.controls');
+          if(controls){
+            // keep them as they were declared in HTML; if missing, create
+            if(!document.getElementById('prev')){
+              const b = document.createElement('button'); b.id='prev'; b.className='btn'; b.innerHTML='&#10094;'; controls.prepend(b);
+            }
+            if(!document.getElementById('next')){
+              const b2 = document.createElement('button'); b2.id='next'; b2.className='btn'; b2.innerHTML='&#10095;'; controls.appendChild(b2);
+            }
+          }
+        }
+
+        // handle initial state
+        handleChange(mql);
+        try{
+          // modern listeners
+          mql.addEventListener('change', handleChange);
+        }catch(err){
+          // fallback
+          mql.addListener(handleChange);
+        }
+      });
+
+      // Accessibility: if user navigates with keyboard: allow left/right arrows to move slides on mobile
+      window.addEventListener('keydown', (e)=>{
+        if(!mql.matches) return; // only when slideshow active
+        if(e.key === 'ArrowLeft'){ prevSlide(); restartInterval(); }
+        if(e.key === 'ArrowRight'){ nextSlide(); restartInterval(); }
+      });
+    })();
+  </script>
+</body>
+</html>

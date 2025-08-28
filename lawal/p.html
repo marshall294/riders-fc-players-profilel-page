@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auwal Yusuf - Player Profile</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #fafafa;
+    }
+    header {
+      background: linear-gradient(135deg, #004aad, #0073e6);
+      color: #fff;
+      padding: 1rem 2rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .hero {
+      text-align: center;
+      padding: 2rem 1rem;
+      background: #f0f4ff;
+      animation: fadeIn 2s ease;
+    }
+    .hero img {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid #004aad;
+      animation: zoomIn 1.5s ease;
+    }
+    .hero h2 {
+      margin: 1rem 0 0.5rem;
+      font-size: 1.8rem;
+      color: #004aad;
+    }
+    .section {
+      padding: 2rem 1.2rem;
+      max-width: 900px;
+      margin: auto;
+    }
+    .section-title h3 {
+      font-size: 1.6rem;
+      color: #004aad;
+      border-left: 6px solid #004aad;
+      padding-left: 10px;
+      margin-bottom: 1rem;
+    }
+    .info-list {
+      list-style: none;
+      padding: 0;
+    }
+    .info-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid #ddd;
+      font-size: 1.1rem;
+    }
+    /* Slideshow */
+    .slideshow-wrap {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    .slideshow {
+      position: relative;
+      max-width: 800px;
+      margin: auto;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .slide {
+      display: none;
+      animation: fade 1.5s;
+    }
+    .slide img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+    .show {
+      display: block;
+    }
+    @keyframes fade { from {opacity: 0.4;} to {opacity: 1;} }
+    /* Animations */
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    @keyframes zoomIn {
+      from {transform: scale(0.8); opacity: 0;}
+      to {transform: scale(1); opacity: 1;}
+    }
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      margin-top: 2rem;
+      background: #004aad;
+      color: #fff;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <h1>Player Profile</h1>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <img src="1.jpg" alt="Auwal Yusuf Profile Picture">
+    <h2>Auwal Yusuf</h2>
+    <p>Promising Midfielder | Dynamic Playmaker | Team Leader</p>
+  </section>
+
+  <!-- PLAYER INFORMATION -->
+  <section class="section">
+    <div class="section-title"><h3>Player Information</h3></div>
+    <ul class="info-list">
+      <li><strong>Full Name:</strong> Auwal Yusuf</li>
+      <li><strong>Date of Birth:</strong> March 12, 2006</li>
+      <li><strong>Age:</strong> 19</li>
+      <li><strong>Height:</strong> 1.78m (5'10")</li>
+      <li><strong>Position:</strong> Central Midfielder</li>
+      <li><strong>Current Club:</strong> Riders FC Academy</li>
+      <li><strong>Preferred Foot:</strong> Right</li>
+      <li><strong>Nationality:</strong> Nigerian</li>
+    </ul>
+  </section>
+
+  <!-- SLIDESHOW -->
+  <div class="slideshow-wrap" aria-label="Photo highlights">
+    <div class="section-title"><h3>Photo Highlights</h3></div>
+    <div class="slideshow" id="slideshow">
+      <div class="slide show"><img src="1.jpg" alt="Auwal action 1"></div>
+      <div class="slide"><img src="2.jpg" alt="Auwal action 2"></div>
+      <div class="slide"><img src="3.jpg" alt="Auwal action 3"></div>
+      <div class="slide"><img src="4.jpg" alt="Auwal action 4"></div>
+      <div class="slide"><img src="5.jpg" alt="Auwal action 5"></div>
+      <div class="slide"><img src="6.jpg" alt="Auwal action 6"></div>
+      <div class="slide"><img src="7.jpg" alt="Auwal action 7"></div>
+    </div>
+  </div>
+
+  <!-- ACHIEVEMENTS -->
+  <section class="section">
+    <div class="section-title"><h3>Career Achievements</h3></div>
+    <ul class="info-list">
+      <li>🏆 Top Scorer - Suleja Chairman’s Cup (2024)</li>
+      <li>⚽ Best Midfielder Award - Riders FC Academy (2023)</li>
+      <li>🥇 Led team to semi-finals in Kaduna Youth Tournament</li>
+      <li>🌍 Selected for Nigeria U17 training camp (2022)</li>
+    </ul>
+  </section>
+
+  <!-- PLAYING STYLE -->
+  <section class="section">
+    <div class="section-title"><h3>Playing Style</h3></div>
+    <p>
+      Auwal is a creative central midfielder known for his vision, quick passes, 
+      and leadership on the pitch. He dictates the tempo of play, connects 
+      defense with attack, and is equally skilled at breaking down opposition 
+      defenses with precise through-balls.
+    </p>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="section">
+    <div class="section-title"><h3>Gallery</h3></div>
+    <p>Explore more highlights and training sessions from Auwal Yusuf’s career.</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    &copy; 2025 Riders FC | Player Profile: Auwal Yusuf
+  </footer>
+
+  <!-- SLIDESHOW SCRIPT -->
+  <script>
+    let slideIndex = 0;
+    const slides = document.querySelectorAll(".slide");
+    function showSlides() {
+      slides.forEach(s => s.classList.remove("show"));
+      slideIndex++;
+      if (slideIndex > slides.length) {slideIndex = 1;}
+      slides[slideIndex-1].classList.add("show");
+      setTimeout(showSlides, 4000); // Change every 4s
+    }
+    showSlides();
+  </script>
+</body>
+</html>

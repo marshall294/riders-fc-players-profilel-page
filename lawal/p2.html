@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Auwal Lawal — Player Profile</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Page Title Icon (Favicon / Logo) -->
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="apple-touch-icon" href="logo.png" />
+  <meta name="theme-color" content="#ffffff" />
+</head>
+
+
+<style>
+  :root{
+    --bg-1: #fdfbfb;
+    --bg-2: #ebedee;
+    --accent: #667eea;      /* Indigo-blue */
+    --accent2: #f56565;     /* Coral red */
+    --accent3: #48bb78;     /* Green */
+    --card-bg: rgba(255,255,255,0.85);
+    --glass: rgba(255,255,255,0.06);
+    --text-main: #1a202c;
+    --muted: #4a5568;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    background: linear-gradient(135deg,var(--bg-1),var(--bg-2));
+    color: var(--text-main);
+    -webkit-font-smoothing:antialiased;
+    line-height:1.65;
+    padding:18px 0;
+  }
+
+  .wrap{max-width:1200px;margin:0 auto;padding:0 18px}
+
+  /* Header */
+  header{
+    text-align:center;
+    padding:38px 18px;
+    margin-bottom:18px;
+    color:#fff;
+    border-radius:14px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+  }
+  header h1{
+    font-family:'Rajdhani',sans-serif;
+    font-size:2.8rem;
+    letter-spacing:1.5px;
+    color:#fff;
+  }
+  header p{
+    margin-top:8px;
+    color:#f0f0f0;
+    font-weight:500;
+  }
+
+  /* Card sections */
+  section.card{
+    background: var(--card-bg);
+    border-radius:14px;
+    padding:22px;
+    margin:20px 0;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0,0,0,0.05);
+    animation: fadeUp .6s ease both;
+  }
+  @keyframes fadeUp{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}
+
+  section.card h2{
+    font-family:'Rajdhani',sans-serif;
+    color:var(--accent);
+    font-size:1.6rem;
+    margin-bottom:12px;
+    border-bottom:3px solid rgba(102,126,234,0.3);
+    display:inline-block;
+    padding-bottom:6px;
+  }
+
+  /* Player info */
+  .player-grid{
+    display:grid;
+    grid-template-columns: 1fr 320px;
+    gap:18px;
+    align-items:start;
+  }
+  .player-meta p{
+    margin:8px 0;
+    color:var(--text-main);
+  }
+  .portrait{
+    min-height:240px;border-radius:10px;overflow:hidden;
+    background:linear-gradient(180deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
+    display:flex;align-items:center;justify-content:center;
+  }
+  .portrait img{width:100%;height:100%;object-fit:cover}
+
+  /* Gallery */
+  .gallery {margin-top:8px;}
+  .gallery h2 {color:var(--accent2);}
+
+  /* Slideshow container (mobile) */
+  .slideshow-container{
+    position:relative;width:100%;height:520px;border-radius:12px;overflow:hidden;background:#000;
+  }
+  .slideshow-container .slides{
+    position:absolute; inset:0; opacity:0; transition:opacity .5s ease;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .slideshow-container .slides.active{opacity:1; z-index:2}
+  .slideshow-container img{width:100%;height:100%;object-fit:cover;display:block}
+
+  .controls{
+    position:absolute; top:50%; left:0; right:0; display:flex;justify-content:space-between;
+    transform:translateY(-50%);pointer-events:none;
+  }
+  .btn{
+    pointer-events:auto;
+    background: rgba(0,0,0,0.45);
+    border:1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    width:44px;height:44px;border-radius:999px;display:grid;place-items:center;font-size:20px;
+    margin:0 10px; transition:transform .15s;
+  }
+  .btn:active{transform:scale(.96)}
+  .dots{
+    position:absolute;left:50%;transform:translateX(-50%);bottom:12px;display:flex;gap:8px;
+  }
+  .dot{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,0.5);opacity:.7;border:1px solid #fff}
+  .dot.active{background:var(--accent2);opacity:1;transform:scale(1.3)}
+
+  /* Desktop grid gallery */
+  .grid-gallery{display:none;grid-template-columns: repeat(3,1fr);gap:12px}
+  .grid-gallery img{
+    width:100%;height:520px;object-fit:cover;border-radius:12px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);transition:transform .25s ease;
+  }
+  .grid-gallery img:hover{transform:scale(1.03)}
+
+  /* video wrapper */
+  .video-wrapper{position:relative;padding-bottom:56.25%;height:0;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.18)}
+  .video-wrapper iframe{position:absolute;left:0;top:0;width:100%;height:100%;border:0;border-radius:12px}
+
+  /* table */
+  .table-wrapper{overflow-x:auto;border-radius:8px;padding:6px;background:linear-gradient(90deg, rgba(102,126,234,0.15), rgba(118,75,162,0.05))}
+  table{min-width:680px;border-collapse:collapse;width:100%}
+  th,td{padding:10px;border:1px solid rgba(0,0,0,0.08);text-align:center}
+  th{background:linear-gradient(90deg,#667eea,#764ba2);color:#fff;font-weight:700}
+
+  /* responsive */
+  @media (max-width: 767.98px){
+    .player-grid{grid-template-columns:1fr}
+    .portrait{min-height:200px}
+    .grid-gallery{display:none}
+    .slideshow-container{display:block}
+    .controls{display:flex}
+  }
+  @media (min-width: 768px){
+    .slideshow-container{display:none}
+    .grid-gallery{display:grid}
+    .controls{display:none}
+  }
+
+  .muted {color:var(--muted)}
+  .actions {display:flex;gap:10px;margin-top:12px}
+  .btn-primary{
+    background:linear-gradient(90deg,#f56565,#f6ad55);
+    color:#fff;
+    border:none;padding:8px 14px;
+    border-radius:8px;font-weight:700;box-shadow:0 3px 6px rgba(0,0,0,0.2);
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+<!-- HEADER -->
+<header style="text-align:center; padding:2rem; background:#111; color:white; position:relative; overflow:hidden;">
+  <div style="display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap; position:relative;">
+    
+    <!-- Riders FC Logo in Rotating White Ring (Behind Text) -->
+    <div id="logo-container" style="position:absolute; top:10px; left:50%; transform:translateX(-50%); opacity:1; transition:all 1s ease; z-index:0;">
+      <div style="width:70px; height:70px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; animation:spinRing 6s linear infinite; box-shadow:0 4px 12px rgba(0,0,0,0.3);">
+        <img src="logo.png" alt="Riders FC Logo" style="width:90%; height:90%; object-fit:contain;">
+      </div>
+    </div>
+
+    <!-- Animated Name -->
+    <h1 style="font-size:2.2rem; margin:0; background:linear-gradient(90deg,#00ffcc,#ffcc00,#ff3399);
+               -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+               animation:colorFlow 6s linear infinite; z-index:2; position:relative;">
+      Auwal Lawal
+    </h1>
+  </div>
+
+  <!-- Subtitle -->
+  <p style="margin:0.5rem 0; font-size:1rem; opacity:0.85; animation:fadeUp 2s ease; z-index:2; position:relative;">
+    Professional Midfielder | Dynamic Playmaker | Vision & Control
+  </p>
+
+  <!-- Riders FC Club Name -->
+  <h2 style="margin:0.8rem 0; font-size:1.3rem; letter-spacing:1px; color:#00ffcc;
+             text-shadow:0 0 10px rgba(0,255,204,0.6); animation:fadeInScale 2s ease; z-index:2; position:relative;">
+    Riders FC
+  </h2>
+
+  <!-- Greeting + Date & Time -->
+  <p id="greeting-time" style="margin-top:1rem; font-size:0.95rem; color:#bbb; z-index:2; position:relative;"></p>
+
+  <!-- CSS Animations -->
+  <style>
+    @keyframes colorFlow {
+      0% {background-position:0%;}
+      100% {background-position:200%;}
+    }
+    @keyframes fadeUp {
+      from {opacity:0; transform:translateY(20px);}
+      to {opacity:1; transform:translateY(0);}
+    }
+    @keyframes fadeInScale {
+      from {opacity:0; transform:scale(0.8);}
+      to {opacity:1; transform:scale(1);}
+    }
+    @keyframes spinRing {
+      from {transform:rotate(0deg);}
+      to {transform:rotate(360deg);}
+    }
+  </style>
+
+  <!-- JS for Greeting + Date/Time + Logo Movement -->
+  <script>
+    function updateGreeting() {
+      const el = document.getElementById("greeting-time");
+      const now = new Date();
+      const hours = now.getHours();
+      let greeting = "";
+      if(hours < 12) greeting = "Good Morning";
+      else if(hours < 18) greeting = "Good Afternoon";
+      else greeting = "Good Evening";
+
+      const options = { weekday:"long", year:"numeric", month:"long", day:"numeric", 
+                        hour:"2-digit", minute:"2-digit", second:"2-digit" };
+      el.textContent = `${greeting} | ${now.toLocaleDateString(undefined, options)}`;
+    }
+    setInterval(updateGreeting,1000);
+    updateGreeting();
+
+    // Logo movement: center -> right -> left -> back to center
+    const logo = document.getElementById("logo-container");
+    let position = "center";
+
+    function moveLogo() {
+      logo.style.opacity = 0;
+      setTimeout(() => {
+        if (position === "center") {
+          logo.style.left = "95%";  // right side
+          logo.style.transform = "translateX(-100%)";
+          position = "right";
+        } else if (position === "right") {
+          logo.style.left = "5%";   // left side
+          logo.style.transform = "translateX(0)";
+          position = "left";
+        } else {
+          logo.style.left = "50%";  // back to center
+          logo.style.transform = "translateX(-50%)";
+          position = "center";
+        }
+        logo.style.opacity = 1;
+      }, 1000); // fade duration
+    }
+    setInterval(moveLogo, 5000); // every 5s
+  </script>
+</header>
+
+
+
+
+
+<!-- Player Info -->
+<section class="card" aria-labelledby="player-info" style="margin:20px; padding:20px; border-radius:20px; background:linear-gradient(135deg, #fdfbfb, #ebedee); box-shadow:0 4px 15px rgba(0,0,0,0.1); position:relative;">
+  <h2 id="player-info" style="text-align:center; font-size:28px; font-weight:700; color:#2a2a72; margin-bottom:20px;">Player Information</h2>
+  
+  <div class="player-grid" style="display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:20px;">
+    <!-- Portrait -->
+    <aside class="portrait" aria-hidden="true" style="flex:1 1 250px; text-align:center; position:relative;">
+      <img src="1.jpg" alt="Auwal portrait" style="border-radius:20px; width:100%; max-width:350px; height:auto; object-fit:cover; box-shadow:0 6px 20px rgba(0,0,0,0.2); position:relative;">
+      
+      <!-- Animated Overlay Info -->
+      <div id="overlay-info" style="position:absolute; bottom:30%; right:5%; background:rgba(0,0,0,0.75); color:#fff; padding:10px 18px; border-radius:12px; font-size:16px; font-weight:600; box-shadow:0 4px 12px rgba(0,0,0,0.4); white-space:nowrap; overflow:hidden; border-right:2px solid #fff; width:0; transition:width 0.3s;"></div>
+    </aside>
+    
+    <!-- Info -->
+    <div class="player-meta" style="flex:1 1 300px; min-width:260px;">
+      <p><strong>Full name:</strong> Auwal Lawal</p>
+      <p><strong>Position:</strong> Central Midfielder (CM) / Defensive Midfielder (CDM)</p>
+      <p><strong>Date of birth:</strong> 12 February 2001 (24)</p>
+      <p><strong>Height / Weight:</strong> 1.80 m / 74 kg</p>
+      <p><strong>Current club:</strong> Free Agent</p>
+      <p><strong>Nationality:</strong> Nigerian</p>
+      <p style="color:#555; font-style:italic;">Quick summary: Box-to-box midfielder with excellent passing, defensive impact and leadership.</p>
+      <div class="actions" style="margin-top:15px;">
+        <a class="btn-primary" href="#" style="background:#2a2a72; color:white; padding:10px 20px; border-radius:10px; text-decoration:none; font-weight:600;">Request Trial</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inline JS for Typewriter Animation -->
+  <script>
+    const overlay = document.getElementById("overlay-info");
+    const details = [
+      "👤 Name: Auwal Lawal",
+      "⚽ Position: Midfielder (CM/CDM)",
+      "🎂 Age: 24",
+      "🏟️ Current Club: Riders FC"
+    ];
+    let i = 0; // which detail
+    let j = 0; // which letter
+    let current = "";
+    let isDeleting = false;
+
+    function typeWriter() {
+      let fullText = details[i];
+
+      if (!isDeleting) {
+        // typing forward
+        current = fullText.substring(0, j + 1);
+        j++;
+        overlay.textContent = current;
+        overlay.style.width = current.length + "ch";
+        if (j === fullText.length) {
+          isDeleting = true;
+          setTimeout(typeWriter, 2000); // pause after full word
+          return;
+        }
+      } else {
+        // deleting backward
+        current = fullText.substring(0, j - 1);
+        j--;
+        overlay.textContent = current;
+        overlay.style.width = current.length + "ch";
+        if (j === 0) {
+          isDeleting = false;
+          i = (i + 1) % details.length; // next detail
+        }
+      }
+      setTimeout(typeWriter, isDeleting ? 80 : 120);
+    }
+
+    typeWriter();
+  </script>
+</section>
+
+
+<!-- Stats Section -->
+<section class="card" style="margin:20px; padding:20px; border-radius:20px; background:linear-gradient(135deg, #dfe9f3, #ffffff); box-shadow:0 4px 15px rgba(0,0,0,0.1);">
+  <h2 style="text-align:center; font-size:26px; font-weight:700; color:#0d47a1; margin-bottom:20px;">Key Stats</h2>
+  
+  <div class="stats" style="display:flex; flex-wrap:wrap; justify-content:center; gap:20px;">
+    <!-- Passing -->
+    <div class="stat-box" style="flex:1 1 120px; max-width:150px; padding:15px; text-align:center; border-radius:15px; background:#ffffff; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+      <h3 style="font-size:18px; margin-bottom:10px; color:#2a2a72;">Passing</h3>
+      <div class="counter" data-target="92" style="font-size:28px; font-weight:700; color:#0d47a1;">0</div>
+    </div>
+    <!-- Defence -->
+    <div class="stat-box" style="flex:1 1 120px; max-width:150px; padding:15px; text-align:center; border-radius:15px; background:#ffffff; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+      <h3 style="font-size:18px; margin-bottom:10px; color:#2a2a72;">Defence</h3>
+      <div class="counter" data-target="85" style="font-size:28px; font-weight:700; color:#0d47a1;">0</div>
+    </div>
+    <!-- Stamina -->
+    <div class="stat-box" style="flex:1 1 120px; max-width:150px; padding:15px; text-align:center; border-radius:15px; background:#ffffff; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+      <h3 style="font-size:18px; margin-bottom:10px; color:#2a2a72;">Stamina</h3>
+      <div class="counter" data-target="88" style="font-size:28px; font-weight:700; color:#0d47a1;">0</div>
+    </div>
+  </div>
+</section>
+
+<!-- Counter Animation Script -->
+<script>
+  const counters = document.querySelectorAll('.counter');
+  counters.forEach(counter => {
+    counter.innerText = '0';
+    const updateCounter = () => {
+      const target = +counter.getAttribute('data-target');
+      const current = +counter.innerText;
+      const increment = target / 100;
+      if (current < target) {
+        counter.innerText = `${Math.ceil(current + increment)}`;
+        setTimeout(updateCounter, 40);
+      } else {
+        counter.innerText = target;
+      }
+    };
+    updateCounter();
+  });
+</script>
+
+<!-- Responsive -->
+<style>
+  @media(max-width: 768px){
+    .portrait img{ max-width: 95% !important; } /* keep portrait large */
+    .stat-box{ flex:1 1 80px; max-width:110px !important; padding:10px; } /* shrink stats */
+    .stat-box h3{ font-size:14px; }
+    .stat-box .counter{ font-size:22px; }
+  }
+</style>
+
+
+    <!-- Gallery -->
+    <section class="card" aria-labelledby="gallery">
+      <h2 id="gallery">Photo Highlights</h2>
+      <div class="gallery">
+        <!-- Mobile slideshow -->
+        <div class="slideshow-container" id="slideshow" aria-live="polite">
+          <div class="slides"><img src="1.jpg" alt="Auwal action 1"></div>
+          <div class="slides"><img src="2.jpg" alt="Auwal action 2"></div>
+          <div class="slides"><img src="3.jpg" alt="Auwal action 3"></div>
+          <div class="slides"><img src="4.jpg" alt="Auwal action 4"></div>
+          <div class="slides"><img src="5.jpg" alt="Auwal action 5"></div>
+          <div class="slides"><img src="1.jpg" alt="Auwal action 6"></div>
+          <div class="slides"><img src="2.jpg" alt="Auwal action 7"></div>
+          <div class="controls">
+            <button class="btn" id="prev" aria-label="Previous slide">&#10094;</button>
+            <button class="btn" id="next" aria-label="Next slide">&#10095;</button>
+          </div>
+          <div class="dots" id="dots"></div>
+        </div>
+        <!-- Desktop grid -->
+        <div class="grid-gallery" id="gridGallery">
+          <img src="1.jpg" alt="Auwal action 1">
+          <img src="2.jpg" alt="Auwal action 2">
+          <img src="3.jpg" alt="Auwal action 3">
+          <img src="4.jpg" alt="Auwal action 4">
+          <img src="5.jpg" alt="Auwal action 5">
+          <img src="1.jpg" alt="Auwal action 6">
+          <img src="2.jpg" alt="Auwal action 7">
+        </div>
+      </div>
+    </section>
+
+    <!-- Video -->
+    <section class="card" aria-labelledby="video">
+      <h2 id="video">Highlights Video</h2>
+      <div class="video-wrapper">
+        <iframe src="https://www.youtube.com/embed/ScMzIvxBSi4" title="Auwal Lawal highlights" allowfullscreen></iframe>
+      </div>
+    </section>
+
+<!-- Playing Style -->
+<section style="background:linear-gradient(135deg,#f7f7ff,#e0ecff); border-radius:18px; padding:20px; margin:20px auto; box-shadow:0 8px 18px rgba(0,0,0,0.2); font-family:Arial, sans-serif; max-width:700px;">
+  <h2 style="text-align:center; font-size:24px; font-weight:bold; margin-bottom:15px; color:#2b3a67;">Playing Style</h2>
+  <p style="text-align:center; font-size:15px; margin-bottom:20px; color:#444;">Auwal Lawal is a versatile midfielder known for his vision, passing accuracy, and control. He drives tempo, breaks up play, and supports transitions between defence and attack.</p>
+  
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+    <!-- Vision -->
+    <div style="background:#fff; border-radius:12px; padding:15px; box-shadow:0 4px 10px rgba(0,0,0,0.15); text-align:center;">
+      <h3 style="margin-bottom:10px; font-size:16px; color:#4a3f88;">Vision</h3>
+      <canvas id="chartVision" width="120" height="120"></canvas>
+    </div>
+    
+    <!-- Passing -->
+    <div style="background:#fff; border-radius:12px; padding:15px; box-shadow:0 4px 10px rgba(0,0,0,0.15); text-align:center;">
+      <h3 style="margin-bottom:10px; font-size:16px; color:#237a57;">Passing</h3>
+      <canvas id="chartPassing" width="120" height="120"></canvas>
+    </div>
+    
+    <!-- Control -->
+    <div style="background:#fff; border-radius:12px; padding:15px; box-shadow:0 4px 10px rgba(0,0,0,0.15); text-align:center;">
+      <h3 style="margin-bottom:10px; font-size:16px; color:#b23a48;">Ball Control</h3>
+      <canvas id="chartControl" width="120" height="120"></canvas>
+    </div>
+    
+    <!-- Defence -->
+    <div style="background:#fff; border-radius:12px; padding:15px; box-shadow:0 4px 10px rgba(0,0,0,0.15); text-align:center;">
+      <h3 style="margin-bottom:10px; font-size:16px; color:#005f73;">Defensive Contribution</h3>
+      <canvas id="chartDefence" width="120" height="120"></canvas>
+    </div>
+  </div>
+</section>
+
+<script>
+  function drawChart(id, value, color){
+    var canvas = document.getElementById(id);
+    var ctx = canvas.getContext("2d");
+    var startAngle = -0.5 * Math.PI;
+    var endAngle = (value/100) * (2 * Math.PI) + startAngle;
+    
+    // Background circle
+    ctx.beginPath();
+    ctx.arc(60,60,50,0,2*Math.PI);
+    ctx.strokeStyle = "#ddd";
+    ctx.lineWidth = 10;
+    ctx.stroke();
+    
+    // Foreground arc
+    ctx.beginPath();
+    ctx.arc(60,60,50,startAngle,endAngle);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 10;
+    ctx.stroke();
+    
+    // Text
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#333";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(value + "%", 60, 60);
+  }
+
+  drawChart("chartVision", 92, "#4a3f88");
+  drawChart("chartPassing", 89, "#237a57");
+  drawChart("chartControl", 85, "#b23a48");
+  drawChart("chartDefence", 80, "#005f73");
+</script>
+
+
+<!-- Strengths -->
+<section class="card">
+  <h2 style="text-align:center; font-size:20px; margin-bottom:15px; color:#444;">Strengths</h2>
+  <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px;">
+    
+    <div style="padding:12px 18px; background:linear-gradient(145deg, #28a745, #218838); 
+                color:#fff; border-radius:10px; font-size:14px; 
+                box-shadow: 4px 4px 10px rgba(0,0,0,0.3), -4px -4px 10px rgba(255,255,255,0.1); 
+                font-weight:bold; text-align:center; min-width:200px;">
+      Excellent ball distribution & first touch
+    </div>
+    
+    <div style="padding:12px 18px; background:linear-gradient(145deg, #007bff, #0056b3); 
+                color:#fff; border-radius:10px; font-size:14px; 
+                box-shadow: 4px 4px 10px rgba(0,0,0,0.3), -4px -4px 10px rgba(255,255,255,0.1); 
+                font-weight:bold; text-align:center; min-width:200px;">
+      High tactical awareness & interception
+    </div>
+    
+    <div style="padding:12px 18px; background:linear-gradient(145deg, #ffc107, #e0a800); 
+                color:#333; border-radius:10px; font-size:14px; 
+                box-shadow: 4px 4px 10px rgba(0,0,0,0.3), -4px -4px 10px rgba(255,255,255,0.1); 
+                font-weight:bold; text-align:center; min-width:200px;">
+      Outstanding stamina & work rate
+    </div>
+    
+    <div style="padding:12px 18px; background:linear-gradient(145deg, #17a2b8, #117a8b); 
+                color:#fff; border-radius:10px; font-size:14px; 
+                box-shadow: 4px 4px 10px rgba(0,0,0,0.3), -4px -4px 10px rgba(255,255,255,0.1); 
+                font-weight:bold; text-align:center; min-width:200px;">
+      Creates chances and links play
+    </div>
+    
+    <div style="padding:12px 18px; background:linear-gradient(145deg, #6f42c1, #4e2880); 
+                color:#fff; border-radius:10px; font-size:14px; 
+                box-shadow: 4px 4px 10px rgba(0,0,0,0.3), -4px -4px 10px rgba(255,255,255,0.1); 
+                font-weight:bold; text-align:center; min-width:200px;">
+      Leadership on and off the pitch
+    </div>
+    
+  </div>
+</section>
+
+
+<!-- Attributes -->
+<section style="padding:20px; margin:20px auto; border-radius:15px; background:linear-gradient(135deg,#f9f9f9,#ececec); box-shadow:0 6px 20px rgba(0,0,0,0.15); max-width:700px;">
+  <h2 style="text-align:center; font-family:'Segoe UI',sans-serif; font-size:26px; color:#222; margin-bottom:20px; text-shadow:1px 1px 2px rgba(0,0,0,0.15);">Attributes</h2>
+  <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center;">
+
+    <div style="padding:12px 18px; background:linear-gradient(145deg,#ff9966,#ff5e62); border:none; border-radius:12px; font-family:'Segoe UI',sans-serif; font-size:16px; font-weight:bold; color:#fff; box-shadow:0 4px 8px rgba(0,0,0,0.2); transform:translateY(0); transition:all 0.2s;">Passing Accuracy: 87%</div>
+
+    <div style="padding:12px 18px; background:linear-gradient(145deg,#36d1dc,#5b86e5); border:none; border-radius:12px; font-family:'Segoe UI',sans-serif; font-size:16px; font-weight:bold; color:#fff; box-shadow:0 4px 8px rgba(0,0,0,0.2);">Tackling Success: 78%</div>
+
+    <div style="padding:12px 18px; background:linear-gradient(145deg,#ff6a00,#ee0979); border:none; border-radius:12px; font-family:'Segoe UI',sans-serif; font-size:16px; font-weight:bold; color:#fff; box-shadow:0 4px 8px rgba(0,0,0,0.2);">Key Passes / Game: 2.1</div>
+
+    <div style="padding:12px 18px; background:linear-gradient(145deg,#11998e,#38ef7d); border:none; border-radius:12px; font-family:'Segoe UI',sans-serif; font-size:16px; font-weight:bold; color:#fff; box-shadow:0 4px 8px rgba(0,0,0,0.2);">Assists (Last Season): 10</div>
+
+    <div style="padding:12px 18px; background:linear-gradient(145deg,#8e2de2,#4a00e0); border:none; border-radius:12px; font-family:'Segoe UI',sans-serif; font-size:16px; font-weight:bold; color:#fff; box-shadow:0 4px 8px rgba(0,0,0,0.2);">Goals (Last Season): 6</div>
+
+    <div style="padding:12px 18px; background:linear-gradient(145deg,#f7971e,#ffd200); border:none; border-radius:12px; font-family:'Segoe UI',sans-serif; font-size:16px; font-weight:bold; color:#333; box-shadow:0 4px 8px rgba(0,0,0,0.2);">Appearances (Career): 145</div>
+
+  </div>
+</section>
+
+
+<!-- Achievements -->
+<section class="card" style="margin-top:20px; padding:20px; border-radius:12px; background:#fff; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+  <h2 style="font-family:'Rajdhani',sans-serif; font-size:26px; font-weight:700; text-align:center; margin-bottom:20px; color:#222; animation: fadeInDown 1s ease;">🏆 Achievements</h2>
+  
+  <ul style="list-style:none; padding:0; margin:0; font-family:'Montserrat',sans-serif; font-size:16px; line-height:1.8; color:#444;">
+    <li style="margin-bottom:12px; display:flex; align-items:center; animation: fadeInUp 1s ease;">
+      <span style="margin-right:10px; font-size:20px;">⭐</span> Voted Best Midfielder — Regional League 2024
+    </li>
+    <li style="margin-bottom:12px; display:flex; align-items:center; animation: fadeInUp 1.2s ease;">
+      <span style="margin-right:10px; font-size:20px;">🥇</span> Club Player of the Year — 2025
+    </li>
+    <li style="margin-bottom:12px; display:flex; align-items:center; animation: fadeInUp 1.4s ease;">
+      <span style="margin-right:10px; font-size:20px;">⚽</span> Led team to two cup finals in 2 seasons
+    </li>
+    <li style="margin-bottom:12px; display:flex; align-items:center; animation: fadeInUp 1.6s ease;">
+      <span style="margin-right:10px; font-size:20px;">🥅</span> Top Assists Leader — 2025
+    </li>
+    <li style="margin-bottom:12px; display:flex; align-items:center; animation: fadeInUp 1.8s ease;">
+      <span style="margin-right:10px; font-size:20px;">🏅</span> Championship Medalist — 2024
+    </li>
+    <li style="margin-bottom:12px; display:flex; align-items:center; animation: fadeInUp 2s ease;">
+      <span style="margin-right:10px; font-size:20px;">🔥</span> Consistent 90% pass accuracy across seasons
+    </li>
+  </ul>
+</section>
+
+<!-- Animations -->
+<style>
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+
+<!-- Career Stats --> 
+<section class="card" style="padding:20px; border-radius:15px; background:linear-gradient(135deg, #f9f9f9, #e6f7ff); box-shadow:0 4px 10px rgba(0,0,0,0.15); margin:20px auto; max-width:800px;">
+  <h2 style="text-align:center; font-size:26px; color:#003366; margin-bottom:15px; font-family:'Trebuchet MS', sans-serif; letter-spacing:1px; text-shadow:1px 1px 2px rgba(0,0,0,0.1);">
+    Career Statistics
+  </h2>
+  
+  <div class="table-wrapper" style="overflow-x:auto;">
+    <table style="width:100%; border-collapse:collapse; font-family:Verdana, sans-serif; font-size:15px; text-align:center; background:white; border-radius:10px; overflow:hidden;">
+      <thead>
+        <tr style="background:linear-gradient(90deg, #003366, #0055aa); color:#fff; font-size:16px;">
+          <th style="padding:12px; border:1px solid #ccc;">Season</th>
+          <th style="padding:12px; border:1px solid #ccc;">Competition</th>
+          <th style="padding:12px; border:1px solid #ccc;">Appearances</th>
+          <th style="padding:12px; border:1px solid #ccc;">Goals</th>
+          <th style="padding:12px; border:1px solid #ccc;">Assists</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#f0f8ff;">
+          <td style="padding:10px; border:1px solid #ddd;">2024</td>
+          <td style="padding:10px; border:1px solid #ddd; font-weight:bold; color:#0055aa;">Suleja SEPA Competition</td>
+          <td style="padding:10px; border:1px solid #ddd;">5</td>
+          <td style="padding:10px; border:1px solid #ddd; color:#008000; font-weight:bold;">2</td>
+          <td style="padding:10px; border:1px solid #ddd; color:#ff6600; font-weight:bold;">5</td>
+        </tr>
+        <tr style="background:#ffffff;">
+          <td style="padding:10px; border:1px solid #ddd;">2025</td>
+          <td style="padding:10px; border:1px solid #ddd; font-weight:bold; color:#0055aa;">Suleja FA Cup</td>
+          <td style="padding:10px; border:1px solid #ddd;">7</td>
+          <td style="padding:10px; border:1px solid #ddd; color:#008000; font-weight:bold;">3</td>
+          <td style="padding:10px; border:1px solid #ddd; color:#ff6600; font-weight:bold;">7</td>
+        </tr>
+        <tr style="background:#f0f8ff;">
+          <td style="padding:10px; border:1px solid #ddd;">2025</td>
+          <td style="padding:10px; border:1px solid #ddd; font-weight:bold; color:#0055aa;">Suleja Chairman Cup</td>
+          <td style="padding:10px; border:1px solid #ddd;">5</td>
+          <td style="padding:10px; border:1px solid #ddd; color:#008000; font-weight:bold;">1</td>
+          <td style="padding:10px; border:1px solid #ddd; color:#ff6600; font-weight:bold;">3</td>
+        </tr>
+        <tr style="background:#ffffff;">
+          <td style="padding:10px; border:1px solid #ddd;">2023 – Present</td>
+          <td style="padding:10px; border:1px solid #ddd; font-weight:bold; color:#800080;">Club Friendlies</td>
+          <td style="padding:10px; border:1px solid #ddd;">31</td>
+          <td style="padding:10px; border:1px solid #ddd; color:#008000; font-weight:bold;">3</td>
+          <td style="padding:10px; border:1px solid #ddd; color:#ff6600; font-weight:bold;">6</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+
+<section style="background:#fff; border-radius:16px; box-shadow:0 6px 20px rgba(0,0,0,0.15); padding:24px; margin-top:24px; font-family:Arial, sans-serif;">
+  <h2 style="font-size:26px; font-weight:700; margin-bottom:16px; background:linear-gradient(to right, purple, deeppink, red); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
+    Player Biography &amp; Statistics
+  </h2>
+
+  <p style="color:#333; line-height:1.6; margin-bottom:24px; font-size:16px;">
+    <span style="font-weight:600; color:purple;">Auwal Lawal</span> is a dynamic Nigerian midfielder 
+    known for his vision, creativity, and work rate. With over 
+    <span style="font-weight:600; color:red;">150 career appearances</span>, 
+    he has consistently demonstrated leadership in the middle of the park, 
+    contributing both defensively and offensively. His passing accuracy of 
+    <span style="font-weight:600; color:green;">87%</span> and strong tackling ability 
+    make him a reliable presence. He is an adaptable player, capable of 
+    controlling tempo, breaking lines, and supporting attacks with key passes and goals.
+  </p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+    <ul style="list-style:none; padding:0; margin:0; color:#333; font-size:15px;">
+      <li><span style="font-weight:600; color:indigo;">20</span> Appearances</li>
+      <li><span style="font-weight:600; color:indigo;">3</span> Goals</li>
+      <li><span style="font-weight:600; color:deeppink;">1</span> Goal Assist</li>
+      <li><span style="font-weight:600; color:blue;">(60%)</span> Shielding — <span style="font-style:italic; color:#666;">Under Pressure (50%)</span></li>
+      <li><span style="font-weight:600; color:blue;">(75%)</span> Passing Ability — <span style="font-style:italic; color:#666;">Under Pressure (65%)</span></li>
+      <li><span style="font-weight:600; color:blue;">(60%)</span> Tackling Skills — <span style="font-style:italic; color:#666;">Under Pressure (50%)</span></li>
+    </ul>
+
+    <ul style="list-style:none; padding:0; margin:0; color:#333; font-size:15px;">
+      <li><span style="font-weight:600; color:blue;">(60%)</span> Dribbling — <span style="font-style:italic; color:#666;">Under Pressure (50%)</span></li>
+      <li><span style="font-weight:600; color:blue;">(80%)</span> Ball Control — <span style="font-style:italic; color:#666;">Under Pressure (70%)</span></li>
+      <li><span style="font-weight:600; color:blue;">(70%)</span> Free Kick Ability — <span style="font-style:italic; color:#666;">Close Range</span></li>
+      <li><span style="font-weight:600; color:blue;">(80%)</span> Technical Ability</li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- Contact -->
+<section class="card" style="background:#fff; padding:20px; border-radius:16px; margin:20px auto; max-width:600px; box-shadow:0 4px 10px rgba(0,0,0,0.1); font-family:'Montserrat', sans-serif; text-align:center;">
+  <h2 style="font-size:22px; font-weight:700; color:#222; margin-bottom:15px;">Contact & Representation</h2>
+  
+  <p style="margin:8px 0; font-size:16px; color:#444;">
+    <strong style="color:#111;">Agent:</strong> Global Sports Management - Riders FC
+  </p>
+  
+  <p style="margin:8px 0; font-size:16px; color:#444;">
+    <strong style="color:#111;">Email:</strong> 
+    <a href="mailto:career@ridersfckwamba.com" style="color:#0066cc; text-decoration:none; font-weight:600;">career@ridersfckwamba.com</a>
+  </p>
+  
+  <p style="margin:8px 0; font-size:16px; color:#444;">
+    <strong style="color:#111;">Phone:</strong> 
+    <a href="https://wa.me/2348102341648" target="_blank" style="color:#25d366; text-decoration:none; font-weight:600;">+234 810 234 1648</a>
+  </p>
+</section>
+
+<script>
+  // Optional: Auto-detect device greeting for contact page
+  document.addEventListener("DOMContentLoaded", function() {
+    let hour = new Date().getHours();
+    let greeting;
+    if (hour < 12) {
+      greeting = "Good Morning 🌅";
+    } else if (hour < 18) {
+      greeting = "Good Afternoon ☀️";
+    } else {
+      greeting = "Good Evening 🌙";
+    }
+    // Add greeting dynamically above the contact card
+    const card = document.querySelector(".card");
+    const greet = document.createElement("p");
+    greet.textContent = greeting;
+    greet.style.fontSize = "18px";
+    greet.style.fontWeight = "600";
+    greet.style.marginBottom = "12px";
+    greet.style.color = "#0066cc";
+    greet.style.textAlign = "center";
+    card.prepend(greet);
+  });
+</script>
+
+
+<!-- Footer (self-contained: inline CSS, SVG icons, JS typewriter) -->
+<footer id="site-footer" style="margin:28px 0 18px 0; padding:22px 16px; background:linear-gradient(90deg,#0b1220,#11243a); color:#FFFFFF; text-align:center; border-radius:12px; box-shadow:0 8px 30px rgba(2,6,23,0.5); font-family:'Rajdhani','Montserrat',system-ui,Arial,sans-serif;">
+  <div style="max-width:1100px;margin:0 auto;">
+
+    <!-- Typewriter text -->
+    <h3 id="footerText"
+        style="display:inline-block; margin:0 auto 14px; font-size:18px; font-weight:700; letter-spacing:0.2px;
+               white-space:nowrap; overflow:hidden; padding-right:8px; border-right:3px solid rgba(255,255,255,0.85);
+               -webkit-text-size-adjust:none; -moz-osx-font-smoothing:grayscale;"
+        aria-live="polite"></h3>
+
+    <!-- Social icons row -->
+    <div style="margin:16px 0 10px 0; display:flex; gap:14px; justify-content:center; align-items:center; flex-wrap:wrap;">
+      <!-- Facebook -->
+      <a href="https://facebook.com/ridersfc" target="_blank" rel="noopener" aria-label="Riders FC Facebook"
+         style="display:inline-grid; place-items:center; width:46px; height:46px; border-radius:10px;
+                background:linear-gradient(180deg,#3b5998,#203864); box-shadow:0 8px 20px rgba(3,9,30,0.45);
+                transform:translateZ(0); transition:transform .18s ease; text-decoration:none;">
+        <svg class="icon" viewBox="0 0 24 24" width="22" height="22" fill="#ffffff" aria-hidden="true">
+          <path d="M22 12.07C22 6.51 17.52 2 12 2S2 6.51 2 12.07c0 5.03 3.66 9.2 8.44 9.95v-7.05H8.1V12.1h2.34V9.79c0-2.31 1.36-3.59 3.45-3.59.99 0 2.02.18 2.02.18v2.22h-1.13c-1.11 0-1.45.69-1.45 1.4v1.68h2.48l-.4 2.87h-2.08V22C18.34 21.27 22 17.1 22 12.07z"/>
+        </svg>
+      </a>
+
+      <!-- Instagram -->
+      <a href="https://instagram.com/ridersfc" target="_blank" rel="noopener" aria-label="Riders FC Instagram"
+         style="display:inline-grid; place-items:center; width:46px; height:46px; border-radius:10px;
+                background:linear-gradient(45deg,#feda75,#d62976); box-shadow:0 8px 20px rgba(3,9,30,0.45);
+                transition:transform .18s ease; text-decoration:none;">
+        <svg class="icon" viewBox="0 0 24 24" width="22" height="22" fill="#ffffff" aria-hidden="true">
+          <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 6.3A4.7 4.7 0 1 0 16.7 13 4.7 4.7 0 0 0 12 8.3zm6.4-3a1.1 1.1 0 1 0 1.1 1.1 1.1 1.1 0 0 0-1.1-1.1zM12 10.4A1.6 1.6 0 1 1 10.4 12 1.6 1.6 0 0 1 12 10.4z"/>
+        </svg>
+      </a>
+
+      <!-- Twitter -->
+      <a href="https://twitter.com/ridersfc" target="_blank" rel="noopener" aria-label="Riders FC Twitter"
+         style="display:inline-grid; place-items:center; width:46px; height:46px; border-radius:10px;
+                background:linear-gradient(180deg,#1da1f2,#0d8bdc); box-shadow:0 8px 20px rgba(3,9,30,0.45);
+                transition:transform .18s ease; text-decoration:none;">
+        <svg class="icon" viewBox="0 0 24 24" width="22" height="22" fill="#fff" aria-hidden="true">
+          <path d="M22 5.92c-.66.29-1.37.49-2.12.58a3.7 3.7 0 0 0 1.62-2.04 7.22 7.22 0 0 1-2.34.9 3.62 3.62 0 0 0-6.17 3.3A10.28 10.28 0 0 1 3.14 4.6a3.6 3.6 0 0 0 1.12 4.83 3.56 3.56 0 0 1-1.64-.45v.04a3.62 3.62 0 0 0 2.9 3.55 3.69 3.69 0 0 1-.95.12c-.23 0-.45-.02-.67-.06a3.64 3.64 0 0 0 3.39 2.52A7.27 7.27 0 0 1 2 19.54a10.2 10.2 0 0 0 5.52 1.62c6.62 0 10.24-5.5 10.24-10.26v-.47A7.3 7.3 0 0 0 22 5.92z"/>
+        </svg>
+      </a>
+
+      <!-- WhatsApp -->
+      <a href="https://wa.me/2348102341648" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"
+         style="display:inline-grid; place-items:center; width:46px; height:46px; border-radius:10px;
+                background:linear-gradient(180deg,#34d058,#1aa94a); box-shadow:0 8px 20px rgba(3,9,30,0.45);
+                transition:transform .18s ease; text-decoration:none;">
+        <svg class="icon" viewBox="0 0 24 24" width="22" height="22" fill="#fff" aria-hidden="true">
+          <path d="M20.5 3.5A11 11 0 1 0 24 12a11 11 0 0 0-3.5-8.5zM12 21a9 9 0 0 1-4.8-1.3L4 20l1.6-3.5A9 9 0 1 1 12 21zM17.1 14.2c-.2-.1-1.1-.5-1.2-.5-.1-.1-.2-.1-.3.1-.2.3-.6.5-1 .6-.2.1-.4.1-.6-.1-.5-.2-1-1-1.2-1.2-.1-.2 0-.4 0-.6.1-.4.6-1.2.6-1.2.1-.2 0-.4 0-.6s-.3-.4-.5-.6c-.4-.2-1-0-1.4.1-.2.1-.5.2-.7.2-.1 0-.3 0-.5.1-.1.2-.4.6-.4.9 0 .4.4 1 1 1.6.6.6 1.4 1.1 2.2 1.2.4.1.8.1 1.2 0 .3 0 .9-.3 1.1-.4.2-.1.4-.1.3-.3z"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Copyright -->
+    <p style="margin:12px 0 0 0; font-size:13px; color:rgba(255,255,255,0.72);">
+      &copy; 2025 Auwal Lawal — Player Profile • Riders FC
+    </p>
+  </div>
+
+  <!-- Inline CSS for animations (icons hover/pulse and responsive tweaks) -->
+  <style>
+    /* icon pulse - slight vertical float to draw attention */
+    @keyframes iconPulse {
+      0% { transform: translateY(0) scale(1); opacity:0.92; }
+      50% { transform: translateY(-4px) scale(1.05); opacity:1; }
+      100% { transform: translateY(0) scale(1); opacity:0.92; }
+    }
+    /* apply pulse to each svg with stagger via nth-child using inline parent structure */
+    #site-footer .icon { animation: iconPulse 2.6s ease-in-out infinite; transform-origin:center; }
+    /* subtle hover effect on links */
+    #site-footer a:hover { transform: translateY(-6px) scale(1.04); }
+    /* small screens: tighten spacing and font size */
+    @media (max-width:520px) {
+      #footerText { font-size:15px; border-right:2px solid rgba(255,255,255,0.8); }
+      #site-footer div[style*="gap:14px"] { gap:10px; }
+    }
+  </style>
+
+  <!-- Inline JS Typewriter (robust and restarts) -->
+  <script>
+    (function(){
+      const el = document.getElementById('footerText');
+      if(!el) return;
+      const text = "Thank you for visiting Auwal Lawal — Official Player Profile • Riders FC";
+      let pos = 0, forward = true, delayAfter = 2200, speedType = 45, speedDelete = 28;
+
+      function step(){
+        if(forward){
+          pos++;
+          el.textContent = text.substring(0,pos);
+          if(pos >= text.length){
+            forward = false;
+            setTimeout(step, delayAfter);
+            return;
+          }
+          setTimeout(step, speedType);
+        } else {
+          pos--;
+          el.textContent = text.substring(0,pos);
+          if(pos <= 0){
+            forward = true;
+            setTimeout(step, 600);
+            return;
+          }
+          setTimeout(step, speedDelete);
+        }
+      }
+      // small initial delay for visual polish
+      setTimeout(step, 400);
+    })();
+  </script>
+</footer>
+
+  </div>
+
+<script>
+(function(){
+  const mql = window.matchMedia('(max-width: 767.98px)');
+  const slideshow = document.getElementById('slideshow');
+  const dotsContainer = document.getElementById('dots');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let slides = [], dots = [], current = 0, intervalId = null;
+  const intervalDelay = 4000;
+
+  function createDots(){
+    if(!dotsContainer) return;
+    dotsContainer.innerHTML = '';
+    slides.forEach((_,i)=>{
+      const d=document.createElement('span');
+      d.className='dot'; 
+      d.dataset.index=i;
+      d.addEventListener('click',()=>{goToSlide(i);restartInterval();});
+      dotsContainer.appendChild(d);
+      dots.push(d);
+    });
+  }
+
+  function updateDots(){
+    dots.forEach((d,i)=>d.classList.toggle('active',i===current));
+  }
+
+  function showSlide(n){
+    slides.forEach((s,i)=>s.classList.toggle('active',i===n));
+    current=n;
+    updateDots();
+  }
+
+  function nextSlide(){
+    showSlide((current+1)%slides.length);
+  }
+
+  function prevSlide(){
+    showSlide((current-1+slides.length)%slides.length);
+  }
+
+  function startInterval(){
+    if(!intervalId) intervalId=setInterval(nextSlide,intervalDelay);
+  }
+
+  function stopInterval(){
+    if(intervalId){
+      clearInterval(intervalId);
+      intervalId=null;
+    }
+  }
+
+  function restartInterval(){
+    stopInterval();
+    startInterval();
+  }
+
+  function goToSlide(n){
+    showSlide(n);
+  }
+
+  function initSlideshow(){
+    if(!slideshow) return;
+    slides=Array.from(slideshow.querySelectorAll('.slides'));
+    if(!slides.length) return;
+    dots=[]; 
+    createDots(); 
+    showSlide(0);
+    if(prevBtn) prevBtn.onclick=()=>{prevSlide();restartInterval();};
+    if(nextBtn) nextBtn.onclick=()=>{nextSlide();restartInterval();};
+    if(mql.matches){ startInterval(); }
+  }
+
+  document.addEventListener('DOMContentLoaded',initSlideshow);
+})();
+</script>
+</body>
+</html>
