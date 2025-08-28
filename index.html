@@ -1,0 +1,625 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Auwal Lawal — Professional Football Player Profile</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --accent:#0f4c81;
+      --accent-2:#06a77d;
+      --muted:#6b7280;
+      --glass: rgba(255,255,255,0.6);
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background: linear-gradient(180deg, #f7fbff 0%, var(--bg) 100%);
+      color:#0b1220;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      padding-bottom:40px;
+    }
+
+    /* Header / Hero */
+    header.hero{
+      padding:34px 20px;
+      max-width:1200px;
+      margin:18px auto;
+      display:flex;
+      gap:18px;
+      align-items:center;
+      justify-content:space-between;
+      background: linear-gradient(90deg, rgba(15,76,129,0.95), rgba(6,167,125,0.95));
+      color:#fff;
+      border-radius:18px;
+      box-shadow: 0 12px 40px rgba(12,40,80,0.12);
+      overflow:hidden;
+    }
+    .hero-left{
+      min-width:0;
+    }
+    .name{
+      font-size:1.85rem;
+      font-weight:800;
+      letter-spacing: -0.02em;
+      margin-bottom:6px;
+    }
+    .role{
+      font-weight:600;
+      opacity:0.95;
+    }
+    .hero-meta{
+      display:flex;
+      gap:10px;
+      margin-top:12px;
+      flex-wrap:wrap;
+    }
+    .chip{
+      background: rgba(255,255,255,0.12);
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:0.9rem;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      backdrop-filter: blur(4px);
+      border:1px solid rgba(255,255,255,0.06);
+    }
+
+    /* Layout */
+    .container{
+      max-width:1200px;
+      margin:22px auto;
+      padding:0 18px;
+      display:grid;
+      gap:22px;
+      grid-template-columns: 1fr;
+    }
+
+    /* Player Info Card */
+    .card {
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow: 0 10px 30px rgba(19,38,78,0.06);
+      padding:20px;
+      overflow:hidden;
+      border:1px solid rgba(15,76,129,0.03);
+    }
+    .player-grid{
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:18px;
+    }
+    .left {
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .player-basics{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:8px;
+    }
+    .kv{
+      font-size:0.92rem;
+      color:var(--muted);
+      display:flex;
+      justify-content:space-between;
+      padding:9px 12px;
+      border-radius:10px;
+      background: linear-gradient(180deg, rgba(6,167,125,0.02), rgba(15,76,129,0.01));
+      border:1px solid rgba(12,40,80,0.02);
+    }
+    .kv strong{color:#0b1220; font-weight:600}
+
+    /* Portrait */
+    .portrait{
+      width:100%;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:12px;
+      overflow:hidden;
+      background: linear-gradient(180deg, rgba(15,76,129,0.06), rgba(6,167,125,0.03));
+      position:relative;
+      min-height:320px;
+    }
+    .portrait img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .portrait .meta-bottom{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      padding:12px;
+      background: linear-gradient(0deg, rgba(0,0,0,0.45), rgba(0,0,0,0));
+      color:#fff;
+      font-size:0.92rem;
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      align-items:center;
+    }
+
+    /* Slideshow */
+    .slideshow-wrap{
+      margin-top:8px;
+    }
+    .slideshow{
+      border-radius:14px;
+      overflow:hidden;
+      position:relative;
+      border:1px solid rgba(12,40,80,0.06);
+      box-shadow: 0 10px 30px rgba(12,40,80,0.06);
+      background: #000;
+    }
+    .slide{
+      display:none;
+      width:100%;
+      height:380px;
+    }
+    .slide img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      filter: brightness(0.95);
+      transition:transform .9s cubic-bezier(.22,.9,.38,1);
+    }
+    .slide.show img{ transform: scale(1.02) }
+    .sl-nav{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:100%;
+      display:flex;
+      justify-content:space-between;
+      pointer-events:none;
+    }
+    .btn-nav{
+      pointer-events:auto;
+      background: rgba(0,0,0,0.45);
+      color:#fff;
+      border-radius:999px;
+      width:44px;
+      height:44px;
+      display:grid;
+      place-items:center;
+      margin:0 10px;
+      border:1px solid rgba(255,255,255,0.06);
+      transition:all .2s ease;
+    }
+    .btn-nav:hover{ transform: scale(1.06); background: rgba(0,0,0,0.6) }
+
+    .dots{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:12px;
+      display:flex;
+      gap:8px;
+    }
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background: rgba(255,255,255,0.7);
+      opacity:0.7;
+      border:1px solid rgba(0,0,0,0.12);
+      transition:all .25s;
+    }
+    .dot.active{ transform:scale(1.4); background:var(--accent-2); opacity:1; }
+
+    /* Sections */
+    .section-title{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    .section-title h3{ margin:0; color:var(--accent); font-size:1.15rem }
+    .two-col{
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:18px;
+    }
+    .table-wrap{ overflow:auto; border-radius:12px; border:1px solid rgba(12,40,80,0.03) }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:760px;
+      font-size:0.95rem;
+    }
+    th,td{
+      padding:12px 14px;
+      border-bottom:1px solid rgba(12,40,80,0.04);
+      text-align:left;
+    }
+    thead th{ background:linear-gradient(90deg,rgba(15,76,129,0.03), rgba(6,167,125,0.02)); font-weight:700; color:#08324c }
+    tfoot td{font-weight:700; background:rgba(15,76,129,0.03)}
+
+    /* Attributes bars */
+    .attr-list{ display:grid; gap:10px }
+    .attr{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .attr .name{ width:120px; color:var(--muted) }
+    .bar{
+      height:12px;
+      width:100%;
+      background: linear-gradient(90deg, rgba(12,40,80,0.06), rgba(6,167,125,0.03));
+      border-radius:99px;
+      overflow:hidden;
+      position:relative;
+    }
+    .bar > i{
+      display:block;
+      height:100%;
+      background: linear-gradient(90deg,var(--accent), var(--accent-2));
+      border-radius:99px;
+      width:0%;
+      transition:width 1s ease;
+    }
+    .attr .score{ width:48px; text-align:right; font-weight:700 }
+
+    /* Achievements & bio */
+    .achievements{ display:grid; grid-template-columns: repeat(2, 1fr); gap:10px }
+    .ach{ padding:12px; background: linear-gradient(180deg, rgba(6,167,125,0.03), rgba(15,76,129,0.02)); border-radius:10px }
+
+    /* Footer */
+    footer{ text-align:center; margin-top:34px; color:var(--muted) }
+
+    /* Responsive */
+    @media (max-width:1024px){
+      .player-grid{ grid-template-columns: 1fr }
+      .two-col{ grid-template-columns: 1fr }
+      .portrait{ min-height:260px }
+    }
+    @media (max-width:680px){
+      header.hero{ flex-direction:column; align-items:flex-start; gap:12px; padding:20px }
+      .portrait{ min-height:220px }
+      .slide{ height:260px }
+      .slideshow{ height:260px }
+      .card{ padding:16px }
+      .kv{ font-size:0.9rem }
+      .player-grid{ gap:12px }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <header class="hero" role="banner" aria-label="Player hero">
+    <div class="hero-left">
+      <div class="name">Auwal Lawal</div>
+      <div class="role">Central Midfielder (CM) / Defensive Midfielder (CDM)</div>
+
+      <div class="hero-meta" aria-hidden="false">
+        <div class="chip">🇳🇬 Nigerian</div>
+        <div class="chip">Age: 24</div>
+        <div class="chip">Preferred foot: Right</div>
+        <div class="chip">Free Agent</div>
+      </div>
+    </div>
+
+    <div class="hero-right" style="text-align:right;min-width:200px">
+      <div style="font-size:0.9rem; opacity:0.95">Contact / Trials</div>
+      <div style="margin-top:10px; display:flex; gap:8px; justify-content:flex-end">
+        <a style="background:#fff;color:var(--accent);padding:8px 12px;border-radius:10px;font-weight:700;text-decoration:none">Request Trial</a>
+        <a style="background:rgba(255,255,255,0.12);color:#fff;padding:8px 12px;border-radius:10px;text-decoration:none">Agent</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="container" role="main">
+
+    <!-- Player Info + Portrait -->
+    <section class="card" aria-labelledby="player-info">
+      <div class="player-grid">
+        <div class="left">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <h3 id="player-info" style="margin:0;color:var(--accent)">Player Information</h3>
+            <div style="font-size:0.9rem;color:var(--muted)">Updated: 2025</div>
+          </div>
+
+          <div class="player-basics" style="margin-top:12px">
+            <div class="kv"><span>Full name</span><strong>Auwal Lawal</strong></div>
+            <div class="kv"><span>Date of birth</span><strong>12 February 2001 (24)</strong></div>
+            <div class="kv"><span>Nationality</span><strong>Nigerian</strong></div>
+            <div class="kv"><span>Height / Weight</span><strong>1.80 m / 74 kg</strong></div>
+            <div class="kv"><span>Current club</span><strong>Free Agent</strong></div>
+            <div class="kv"><span>Languages</span><strong>English, Hausa</strong></div>
+          </div>
+
+          <div style="margin-top:14px">
+            <h4 style="margin:0 0 8px 0; color:#0b1220">Quick Career Summary</h4>
+            <p style="margin:0;color:var(--muted)">
+              Box-to-box midfielder with a strong defensive presence and accurate passing. Reliable starter, leadership experience at youth & senior levels, comfortable as a No.6 or No.8. Available for trials and immediate transfer.
+            </p>
+          </div>
+        </div>
+
+        <aside class="portrait" aria-label="Player portrait">
+          <!-- Placeholder image; replace src with actual player photo if available -->
+          <img src="1.jpg" alt="Auwal Lawal portrait">
+          <div class="meta-bottom">
+            <div style="font-size:0.95rem"><strong>Preferred Foot:</strong> Right</div>
+            <div style="font-size:0.95rem"><strong>Position:</strong> CM / CDM</div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- SLIDESHOW: placed immediately after Player Information as requested -->
+      <div class="slideshow-wrap" aria-label="Photo highlights">
+        <div class="section-title" style="margin-top:18px">
+          <h3>Photo Highlights</h3>
+        </div>
+
+        <div class="slideshow" id="slideshow">
+          <!-- Seven slides -->
+          <div class="slide show"><img src="1.jpg,action,1" alt="Auwal action 1"></div>
+          <div class="slide"><img src="https://source.unsplash.com/1200x800/?football,action,2" alt="Auwal action 2"></div>
+          <div class="slide"><img src="https://source.unsplash.com/1200x800/?football,action,3" alt="Auwal action 3"></div>
+          <div class="slide"><img src="https://source.unsplash.com/1200x800/?football,match,4" alt="Auwal action 4"></div>
+          <div class="slide"><img src="https://source.unsplash.com/1200x800/?football,midfielder,5" alt="Auwal action 5"></div>
+          <div class="slide"><img src="https://source.unsplash.com/1200x800/?soccer,kick,6" alt="Auwal action 6"></div>
+          <div class="slide"><img src="https://source.unsplash.com/1200x800/?soccer,team,7" alt="Auwal action 7"></div>
+
+          <div class="sl-nav" aria-hidden="true">
+            <button class="btn-nav" id="prev" aria-label="Previous slide">&#10094;</button>
+            <button class="btn-nav" id="next" aria-label="Next slide">&#10095;</button>
+          </div>
+
+          <div class="dots" id="dots" role="tablist" aria-label="Slide indicators">
+            <span class="dot active" data-index="0" role="tab" aria-selected="true"></span>
+            <span class="dot" data-index="1" role="tab"></span>
+            <span class="dot" data-index="2" role="tab"></span>
+            <span class="dot" data-index="3" role="tab"></span>
+            <span class="dot" data-index="4" role="tab"></span>
+            <span class="dot" data-index="5" role="tab"></span>
+            <span class="dot" data-index="6" role="tab"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Playing Style, Attributes, Career Stats -->
+    <section class="card" aria-labelledby="style-stats">
+      <div class="section-title">
+        <h3 id="style-stats">Playing Style & Strengths</h3>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <h4 style="margin:0 0 8px 0">Role & Strengths</h4>
+          <ul style="color:var(--muted); margin-top:8px; line-height:1.6">
+            <li><strong>Role:</strong> Box-to-Box Midfielder / Ball-Winning Midfielder (Can operate as No.6 or No.8)</li>
+            <li><strong>Strengths:</strong> Excellent passing range (short & long), strong ball retention under pressure, high work rate & stamina, intelligent positioning & interceptions, leadership & communication, tactical awareness.</li>
+            <li><strong>Areas to improve:</strong> Shooting consistency from distance (working on long-range finishing).</li>
+          </ul>
+
+          <div style="margin-top:16px">
+            <h4 style="margin:0 0 8px 0">Achievements & Highlights</h4>
+            <div class="achievements" style="margin-top:8px">
+              <div class="ach">Captained Kaduna Stars U-23 to regional semi-finals (2020)</div>
+              <div class="ach">Selected for State All-Star XI (2021)</div>
+              <div class="ach">Most interceptions per game (3.1) in 2022 NNL campaign</div>
+              <div class="ach">Consistent starting XI player across seasons</div>
+            </div>
+          </div>
+        </div>
+
+        <aside>
+          <h4 style="margin:0 0 8px 0">Physical & Technical Attributes</h4>
+          <div class="attr-list" style="margin-top:10px">
+            <!-- attributes as bars (scale 0-10) -->
+            <div class="attr"><div class="name">Pace</div><div class="bar" data-val="7"><i></i></div><div class="score">7/10</div></div>
+            <div class="attr"><div class="name">Strength</div><div class="bar" data-val="8"><i></i></div><div class="score">8/10</div></div>
+            <div class="attr"><div class="name">Stamina</div><div class="bar" data-val="9"><i></i></div><div class="score">9/10</div></div>
+            <div class="attr"><div class="name">Passing</div><div class="bar" data-val="8"><i></i></div><div class="score">8/10</div></div>
+            <div class="attr"><div class="name">Tackling</div><div class="bar" data-val="8"><i></i></div><div class="score">8/10</div></div>
+            <div class="attr"><div class="name">Vision</div><div class="bar" data-val="8"><i></i></div><div class="score">8/10</div></div>
+            <div class="attr"><div class="name">Dribbling</div><div class="bar" data-val="7"><i></i></div><div class="score">7/10</div></div>
+            <div class="attr"><div class="name">Shooting</div><div class="bar" data-val="6"><i></i></div><div class="score">6/10</div></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Career Statistics Table -->
+    <section class="card" aria-labelledby="career-stats">
+      <div class="section-title">
+        <h3 id="career-stats">Career Statistics (Last 3 Seasons – Sample Data)</h3>
+      </div>
+
+      <div class="table-wrap" style="margin-top:8px">
+        <table role="table" aria-label="Career statistics table">
+          <thead>
+            <tr>
+              <th>Season</th>
+              <th>Club</th>
+              <th>Competition</th>
+              <th>Appearances</th>
+              <th>Goals</th>
+              <th>Assists</th>
+              <th>Pass Accuracy</th>
+              <th>Tackles/Game</th>
+              <th>Key Passes/Game</th>
+              <th>Minutes Played</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2022/23</td>
+              <td>Kaduna Stars FC</td>
+              <td>Nigerian National League</td>
+              <td>28</td>
+              <td>3</td>
+              <td>7</td>
+              <td>86%</td>
+              <td>2.8</td>
+              <td>1.9</td>
+              <td>2,320</td>
+            </tr>
+            <tr>
+              <td>2021/22</td>
+              <td>Kaduna Stars FC</td>
+              <td>Nigerian National League</td>
+              <td>25</td>
+              <td>2</td>
+              <td>5</td>
+              <td>84%</td>
+              <td>2.5</td>
+              <td>1.6</td>
+              <td>2,050</td>
+            </tr>
+            <tr>
+              <td>2020/21</td>
+              <td>Kaduna Stars U-23</td>
+              <td>Academy League</td>
+              <td>18</td>
+              <td>4</td>
+              <td>6</td>
+              <td>82%</td>
+              <td>2.1</td>
+              <td>1.2</td>
+              <td>1,540</td>
+            </tr>
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <td colspan="3">Totals (Senior Career)</td>
+              <td>53</td>
+              <td>5</td>
+              <td>12</td>
+              <td>85%</td>
+              <td>2.6</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
+
+    <!-- Bio & Contact -->
+    <section class="card" aria-labelledby="bio-contact">
+      <div class="section-title">
+        <h3 id="bio-contact">Player Bio & Contact</h3>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 340px; gap:18px">
+        <div>
+          <h4 style="margin:0 0 8px 0">About Auwal Lawal</h4>
+          <p style="color:var(--muted); margin-top:6px">
+            Auwal Lawal is a dynamic Nigerian central midfielder known for his tireless work rate, precise passing, and defensive intelligence.
+            At 24, he has established himself as a reliable presence in the heart of midfield, capable of dictating tempo, breaking up play,
+            and linking defence to attack. Versatile, disciplined and tactically intelligent, Auwal can shield the back line as a No.6 or drive forward
+            as a No.8. He brings leadership, consistency and a hunger to step up to professional opportunities abroad.
+          </p>
+
+          <div style="margin-top:14px">
+            <h4 style="margin:0 0 8px 0">Representative & Status</h4>
+            <div style="color:var(--muted)">
+              <p style="margin:6px 0"><strong>Agent / Representative:</strong> Available on request</p>
+              <p style="margin:6px 0"><strong>Status:</strong> Free Agent — Available for Trials & Transfers</p>
+            </div>
+          </div>
+        </div>
+
+        <aside style="background:linear-gradient(180deg,#fff,#fbfdff); padding:14px; border-radius:12px; border:1px solid rgba(12,40,80,0.03)">
+          <h4 style="margin:0 0 8px 0">Quick Contacts</h4>
+          <p style="color:var(--muted); margin:6px 0"><strong>Email:</strong> agent@example.com (on request)</p>
+          <p style="color:var(--muted); margin:6px 0"><strong>Phone:</strong> +234 800 000 0000 (on request)</p>
+          <div style="margin-top:10px; display:flex; gap:8px">
+            <a style="flex:1;text-align:center;padding:10px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-weight:700">Request Trial</a>
+            <a style="flex:1;text-align:center;padding:10px;border-radius:10px;background:var(--accent-2);color:#fff;text-decoration:none;font-weight:700">Download PDF</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <footer>
+      <div style="max-width:1200px;margin:0 auto;padding:16px;color:var(--muted);font-size:0.92rem">
+        © 2025 Auwal Lawal — Professional Player Profile • Built for scouts & clubs
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // ---- Slideshow logic (7 slides) ----
+    (function(){
+      const slides = document.querySelectorAll('.slide');
+      const dots = Array.from(document.querySelectorAll('.dot'));
+      const prevBtn = document.getElementById('prev');
+      const nextBtn = document.getElementById('next');
+      let idx = 0;
+      let timer = null;
+      const show = (n) => {
+        slides.forEach((s,i)=> s.classList.toggle('show', i===n));
+        dots.forEach((d,i)=> d.classList.toggle('active', i===n));
+        idx = n;
+      };
+      const next = () => show((idx+1) % slides.length);
+      const prev = () => show((idx-1 + slides.length) % slides.length);
+
+      // initial
+      show(0);
+
+      // autoplay
+      const start = () => { timer = setInterval(next, 3800); };
+      const stop = () => { if(timer) { clearInterval(timer); timer=null } };
+
+      // controls
+      nextBtn.addEventListener('click', ()=> { next(); stop(); start(); });
+      prevBtn.addEventListener('click', ()=> { prev(); stop(); start(); });
+
+      dots.forEach(d => {
+        d.addEventListener('click', () => { show(parseInt(d.dataset.index,10)); stop(); start(); });
+      });
+
+      // pause on hover
+      const slideWrap = document.getElementById('slideshow');
+      slideWrap.addEventListener('mouseenter', stop);
+      slideWrap.addEventListener('mouseleave', start);
+
+      start();
+    })();
+
+    // ---- Animate attribute bars on load ----
+    window.addEventListener('load', () => {
+      const bars = document.querySelectorAll('.bar');
+      bars.forEach(b => {
+        const v = parseFloat(b.getAttribute('data-val')) || 0; // 0-10
+        const pct = Math.round((v / 10) * 100);
+        const inner = b.querySelector('i');
+        // slight delay for each for a staggered animation
+        setTimeout(()=> {
+          inner.style.width = pct + '%';
+        }, 120);
+      });
+    });
+  </script>
+</body>
+</html>
